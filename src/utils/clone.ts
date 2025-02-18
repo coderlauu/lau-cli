@@ -2,7 +2,6 @@ import simpleGit, { SimpleGitOptions } from "simple-git";
 import createLogger from "progress-estimator";
 import chalk from "chalk";
 import { log } from "./log";
-const figlet = require("figlet");
 
 // 初始化进度条
 const logger = createLogger({
@@ -14,11 +13,6 @@ const logger = createLogger({
     }),
   },
 });
-
-const printerForTerminal = async () => {
-  const data = await figlet("lau-cli");
-  console.log(chalk.rgb(40, 156, 193).visible(data));
-};
 
 const gitOptions: Partial<SimpleGitOptions> = {
   baseDir: process.cwd(), // 当前工作目录
@@ -47,8 +41,6 @@ export const clone = async (
     log.info("cd " + chalk.blue("cd"));
     log.info(chalk.yellow("pnpm") + " install");
     log.info(chalk.yellow("pnpm") + " run dev");
-
-    printerForTerminal();
   } catch (error) {
     log.error(chalk.red("代码下载失败~"));
   }

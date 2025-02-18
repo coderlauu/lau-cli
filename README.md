@@ -133,14 +133,14 @@ git push origin main
 
 #【patch-升级补丁版本；minor-升级此版本；major-升级主版本】
 npm version patch
-npm publish // 发布至npm仓库
+npm publish # 发布至npm仓库
 
 # ⚠️Tips：npm镜像源需要配置为 https://registry.npmjs.org/
 # 【淘宝镜像源：https://registry.npmmirror.com/】
 npm config set registry https://registry.npmjs.org/
 
-npm uninstall lau-cli -g // 先删除旧的
-npm install lau-cli -g // 安装npm包
+npm uninstall lau-cli -g # 先删除旧的
+npm install lau-cli -g # 安装npm包
 lau create // 执行命令创建项目模板
 
 ```
