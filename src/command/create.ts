@@ -48,7 +48,7 @@ export const isOverwrite = async (projectName: string) => {
 };
 
 export const getNpmInfo = async (npmName: string) => {
-  const npmUrl = `https://registry.npmjs.org/${name}`;
+  const npmUrl = `https://registry.npmjs.org/${npmName}`;
   let res = {};
   try {
     res = await axios.get(npmUrl);
