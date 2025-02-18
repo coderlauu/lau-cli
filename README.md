@@ -1,3 +1,5 @@
+![Npm 版本](https://img.shields.io/badge/lau-cli_v0.0.1-green)
+
 ```json
 "devDependencies": {
     // 用于命令行交互。
@@ -72,3 +74,26 @@
   注意这里的 rollup-plugin-node-externals 版本是 5 的版本 不是最新的 6 的版本
   "rollup-plugin-node-externals": "^5.1.2",
   :::
+
+bin/index.js
+
+```js
+// 告诉操作系统或 shell，应该使用 Node.js 来执行当前脚本
+// 解决不同操作系统都在node环境下执行
+#!/usr/bin/env node
+```
+
+package.json
+
+```json
+...
+"files": [ // npm 包需要上传的文件
+    "dist",
+    "bin",
+    "README.md"
+  ],
+  "bin": {
+    "dawei": "bin/index.js" // npm 会在 .bin 目录中配置 dawei 执行 bin/index.js
+  },
+...
+```
