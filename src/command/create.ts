@@ -2,6 +2,11 @@ import { input, select } from "@inquirer/prompts";
 import { clone } from "../utils/clone";
 import path from "path";
 import fs from "fs-extra";
+import { name, version } from "../../package.json";
+import axios, { AxiosResponse } from "axios";
+import { gt } from "lodash";
+import chalk from "chalk";
+import { log } from "../utils/log";
 
 export interface TemplateInfo {
   name: string; // 模板名称
@@ -31,7 +36,7 @@ export const templates: Map<string, TemplateInfo> = new Map([
   ],
 ]);
 
-const isOverwrite = async (projectName: string) => {
+export const isOverwrite = async (projectName: string) => {
   console.warn(`${projectName}文件已存在`);
   return await select({
     message: "是否覆盖？",
@@ -40,6 +45,40 @@ const isOverwrite = async (projectName: string) => {
       { name: "取消", value: false },
     ],
   });
+};
+
+export const getNpmInfo = async (npmName: string) => {
+  const npmUrl = `https://registry.npmjs.org/${name}`;
+  let res = {};
+  try {
+    res = await axios.get(npmUrl);
+  } catch (error) {
+    console.error(error);
+  }
+  return res;
+};
+export const getNpmLatestVersion = async (name: string) => {
+  const { data } = (await getNpmInfo(name)) as AxiosResponse;
+  return data["dist-tags"].latest;
+};
+
+export const checkVersion = async (name: string, version: string) => {
+  // 获取远端的版本
+  const latestVersion = await getNpmLatestVersion(name);
+  const needUpdate = gt(latestVersion, version);
+  if (needUpdate) {
+    log.warn(
+      `检查到lau最新版本：${chalk.blue(
+        latestVersion
+      )}，当前版本是：${chalk.blackBright(version)}`
+    );
+    log.info(
+      `可使用：${chalk.yellow(
+        "npm install lau-cli@latest"
+      )}，或者使用：${chalk.yellow("lau update")}更新`
+    );
+  }
+  return needUpdate;
 };
 
 // 定义哪些项目要从远程拉取模板
@@ -51,7 +90,7 @@ export async function create(projectName?: string) {
       return {
         name,
         value: name,
-        description: info.description,
+        description: "  " + info.description,
       };
     }
   );
@@ -71,16 +110,16 @@ export async function create(projectName?: string) {
     }
   }
 
+  // 检查版本更新
+  await checkVersion(name, version);
+
   // 选择模板
   const templateName = await select({
     message: "请选择模板",
     choices: templateList,
   });
   const info = templates.get(templateName);
-  console.log("info", info);
   if (info) {
     clone(info.downloadUrl, projectName, ["-b", info.branch]);
   }
-
-  console.log("create", projectName);
 }
