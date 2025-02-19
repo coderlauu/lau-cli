@@ -138,6 +138,7 @@ npm publish # 发布至npm仓库
 # ⚠️Tips：npm镜像源需要配置为 https://registry.npmjs.org/
 # 【淘宝镜像源：https://registry.npmmirror.com/】
 npm config set registry https://registry.npmjs.org/
+npm config set registry https://registry.npmmirror.com/
 
 npm uninstall lau-cli -g # 先删除旧的
 npm install lau-cli -g # 安装npm包
